@@ -597,8 +597,9 @@ body::after {
 }
 .top-nav__site-logo {
   font-weight: 800;
-  font-size: 1.02em;
-  letter-spacing: 0.34em;
+  /* No font-size here on purpose: LST sizes the wordmark itself and an em
+     value resolves against the 48px nav, which overflows the bar. */
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   background-image: linear-gradient(100deg, var(--nc-copper-2), var(--nc-copper));
   -webkit-background-clip: text;
