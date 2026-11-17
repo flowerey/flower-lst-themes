@@ -948,6 +948,27 @@ tr.torrent-search-row:hover,
   color: var(--nc-copper-2);
 }
 
+/* The forum hero hardcodes its own accent (indigo #6366f1) and a green stat
+   colour, neither of which comes from a custom property, so they survive the
+   token layer and clash with copper. Both need explicit rules. */
+.forum-hero__action-btn--secondary {
+  background-color: rgba(240, 135, 63, 0.12) !important;
+  border-color: rgba(240, 135, 63, 0.3) !important;
+  color: var(--nc-copper-2) !important;
+}
+.forum-hero__action-btn {
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+.forum-hero__action-btn:hover {
+  border-color: rgba(240, 135, 63, 0.45) !important;
+  color: var(--nc-copper-2) !important;
+}
+.forum-hero__stat-value {
+  color: var(--nc-ink) !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
 /* Posts: the left rail carries the hierarchy. */
 article.post,
 .post {
