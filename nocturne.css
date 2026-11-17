@@ -16,8 +16,10 @@
    ----------------------------------------------------------
    Galactic already routes nearly every colour through custom properties, so
    this theme is a token layer plus a handful of rules for the few things the
-   tokens don't reach. No !important except in the reduced-motion guard, no
-   backdrop-filter blur, so it costs nothing to render on long torrent lists.
+   tokens don't reach. !important appears only in the nine .text-* utility
+   remaps (LST sets those with equal-or-higher specificity) and in the
+   reduced-motion guard. No backdrop-filter blur, so it costs nothing to
+   render on long torrent lists.
 
    Rank names and rank colours are never touched: rank styling stays exactly
    as LST sets it.
