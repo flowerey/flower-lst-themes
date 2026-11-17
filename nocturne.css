@@ -1,138 +1,130 @@
 /* ==========================================================================
    Nocturne — LST
-   Cool graphite-indigo surfaces, warm parchment text, one copper accent.
+   A night-shift tracker: ember light over cold graphite, machined panels,
+   copper used as a system rather than a highlight.
 
-   Base      Set Settings -> General -> Theme to "Galactic".
-   Install   Settings -> General -> External CSS stylesheet  (the left field,
+   Base      Settings -> General -> Theme = "Galactic".
+   Install   Settings -> General -> External CSS stylesheet (the LEFT field,
              the one that stacks on the site theme) -> paste this file's URL.
 
-   Hosting   LST's Content-Security-Policy only accepts stylesheets from
-             'self', *.github.io, github.com, gitcdn.xyz, files.catbox.moe
-             and rkeaves.online. A localhost or random-domain URL is refused
-             by the browser, so publish this file on GitHub Pages (or catbox)
-             and paste that URL.
+   Hosting   LST's CSP only accepts stylesheets from 'self', *.github.io,
+             github.com, gitcdn.xyz, files.catbox.moe, rkeaves.online.
 
-   Design notes
+   Structure
    ----------------------------------------------------------
-   Galactic already routes nearly every colour through custom properties, so
-   this theme is a token layer plus a handful of rules for the few things the
-   tokens don't reach. !important appears only in the nine .text-* utility
-   remaps (LST sets those with equal-or-higher specificity) and in the
-   reduced-motion guard. No backdrop-filter blur, so it costs nothing to
-   render on long torrent lists.
+   1. Tokens      : the site's own custom properties, remapped.
+   2. Canvas      : art layer, grain, selection, scrollbars, focus.
+   3. Chrome      : top nav, logo, secondary nav, breadcrumbs, footer.
+   4. Surfaces    : panels, cards, dialogs, popovers.
+   5. Torrents    : rows, posters, badges, stat readouts, actions.
+   6. Forum/chat  : categories, items, posts, bbcode, message bubbles.
+   7. Forms       : inputs, selects, buttons, tabs, pagination, alerts.
+   8. Motion/A11y : transitions and the reduced-motion guard.
 
-   Rank names and rank colours are never touched: rank styling stays exactly
-   as LST sets it.
+   Rank names and rank colours are never touched. No backdrop-filter blur,
+   so the theme stays cheap on long torrent lists.
+   ========================================================================== */
 
-   Palette
-   ----------------------------------------------------------
-   --nc-canvas    #0f1015   page background
-   --nc-surface   #171922   panels, cards
-   --nc-raised    #1e212c   headers, table heads, bubbles
-   --nc-deep      #12141b   nav bars, toolbars
-   --nc-line      rgba(233,228,220,.09)   hairlines
-   --nc-ink       #e9e4dc   primary text
-   --nc-ink-2     #a49c92   secondary text
-   --nc-ink-3     #8a8178   muted (4.97:1 on canvas)
-   --nc-copper    #d98b5f   accent
-   --nc-rose      #cf6679   danger / leechers
-   --nc-sage      #86b17a   success / seeders
-   --nc-amber     #e8b44a   warning
-   --nc-azure     #7aa2f7   info
-   --nc-violet    #b3a6dd   visited links
+/* ==========================================================================
+   1. TOKENS
    ========================================================================== */
 
 :root {
-  /* --- theme tokens ---------------------------------------------------- */
-  --nc-canvas:  #0f1015;
-  --nc-surface: #171922;
-  --nc-raised:  #1e212c;
-  --nc-deep:    #12141b;
-  --nc-line:    rgba(233, 228, 220, 0.09);
-  --nc-line-soft: rgba(233, 228, 220, 0.05);
-  --nc-line-strong: rgba(233, 228, 220, 0.15);
+  /* --- palette --------------------------------------------------------- */
+  --nc-canvas:  #0a0c11;
+  --nc-surface: #12151d;
+  --nc-raised:  #181c26;
+  --nc-deep:    #0d1016;
+  --nc-line:    rgba(236, 230, 221, 0.07);
+  --nc-line-soft: rgba(236, 230, 221, 0.04);
+  --nc-line-strong: rgba(236, 230, 221, 0.13);
 
-  --nc-ink:     #e9e4dc;
-  --nc-ink-2:   #a49c92;
+  --nc-ink:     #ece6dd;
+  --nc-ink-2:   #a69d92;
   --nc-ink-3:   #8a8178;
 
-  --nc-copper:  #d98b5f;
-  --nc-copper-bright: #e8a273;
-  --nc-copper-dim: rgba(217, 139, 95, 0.14);
-  --nc-on-copper: #191108;
+  --nc-copper:  #f0873f;
+  --nc-copper-2: #ffb27a;
+  --nc-copper-dim: rgba(240, 135, 63, 0.13);
+  --nc-on-copper: #150d06;
 
-  --nc-rose:    #cf6679;
-  --nc-rose-soft: #e0808f;
-  --nc-sage:    #86b17a;
-  --nc-sage-deep: #6f9e63;
-  --nc-amber:   #e8b44a;
-  --nc-amber-deep: #d19a2e;
-  --nc-azure:   #7aa2f7;
-  --nc-violet:  #b3a6dd;
+  --nc-sage:    #7fd18b;
+  --nc-sage-deep: #5fae6d;
+  --nc-rose:    #ff6b81;
+  --nc-rose-soft: #ff97a6;
+  --nc-azure:   #6ea8fe;
+  --nc-violet:  #b39ddb;
+  --nc-amber:   #ffc857;
+
+  /* shared design primitives */
+  --nc-radius: 10px;
+  --nc-radius-lg: 14px;
+  --nc-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px -20px rgba(0, 0, 0, 0.95);
+  --nc-edge: inset 0 1px 0 rgba(255, 255, 255, 0.045);
 
   /* --- page + text ----------------------------------------------------- */
   --body-bg: var(--nc-canvas);
   --text-color: var(--nc-ink);
   --body-fg: var(--text-color);
   --text-primary: var(--text-color);
-  --scrollbar-color: rgba(233, 228, 220, 0.22);
+  --scrollbar-color: #2b3140;
 
   /* --- panels ---------------------------------------------------------- */
   --panel-bg: var(--nc-surface);
   --panel-fg: var(--text-color);
   --panel-head-bg: var(--nc-raised);
-  --panel-head-fg: #f4efe7;
+  --panel-head-fg: var(--nc-copper);
   --panel-border: 1px solid var(--nc-line);
-  --panel-border-radius: 12px;
-  --panel-head-border-radius: 12px 12px 0 0;
-  --panel-body-border-radius: 0 0 12px 12px;
-  --panel-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --panel-border-radius: var(--nc-radius-lg);
+  --panel-head-border-radius: 14px 14px 0 0;
+  --panel-body-border-radius: 0 0 14px 14px;
+  --panel-box-shadow: var(--nc-shadow);
   --panel-action-fg: var(--nc-ink-2);
 
   /* --- dialogs --------------------------------------------------------- */
-  --dialog-bg: #1a1d27;
+  --dialog-bg: var(--nc-raised);
   --dialog-fg: var(--text-color);
   --dialog-head-bg: var(--nc-deep);
-  --dialog-head-fg: #f4efe7;
+  --dialog-head-fg: var(--nc-ink);
   --dialog-border: 1px solid var(--nc-line-strong);
-  --dialog-border-radius: 12px;
-  --dialog-box-shadow: 0 24px 64px -24px rgba(0, 0, 0, 0.9);
+  --dialog-border-radius: var(--nc-radius-lg);
+  --dialog-box-shadow: 0 32px 80px -32px rgba(0, 0, 0, 0.95);
 
   /* --- top navigation -------------------------------------------------- */
-  --top-nav-bg: var(--nc-deep);
-  --top-nav-box-shadow: 0 1px 0 0 var(--nc-line), 0 10px 30px -24px #000;
-  --top-nav-dropdown-fg: #c3bcb2;
+  --top-nav-bg: #0c0f15;
+  --top-nav-box-shadow: 0 1px 0 0 rgba(240, 135, 63, 0.22), 0 12px 32px -26px #000;
+  --top-nav-dropdown-fg: #b6ada2;
   --top-nav-dropdown-hover-fg: #ffffff;
   --top-nav-dropdown-hover-bg: var(--nc-raised);
-  --top-nav-dropdown-menu-bg: #171a23;
+  --top-nav-dropdown-menu-bg: #13161f;
   --top-nav-dropdown-menu-border: 1px solid var(--nc-line);
-  --top-nav-dropdown-menu-border-radius: 10px;
-  --top-nav-dropdown-menu-box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.9);
-  --top-nav-dropdown-menu-item-fg: #c3bcb2;
+  --top-nav-dropdown-menu-border-radius: var(--nc-radius);
+  --top-nav-dropdown-menu-box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.95);
+  --top-nav-dropdown-menu-item-fg: #b6ada2;
   --top-nav-dropdown-menu-item-hover-fg: #ffffff;
-  --top-nav-dropdown-menu-item-hover-bg: rgba(233, 228, 220, 0.06);
+  --top-nav-dropdown-menu-item-hover-bg: rgba(240, 135, 63, 0.1);
   --top-nav-dropdown-menu-item-icon-fg: var(--nc-copper);
-  --top-nav-dropdown-menu-item-icon-bg: #242835;
+  --top-nav-dropdown-menu-item-icon-bg: rgba(240, 135, 63, 0.1);
   --top-nav-ratio-bar-fg: var(--nc-ink);
-  --top-nav-icon-bar-icon-bg: #242835;
-  --top-nav-icon-bar-icon-fg: #c3bcb2;
-  --top-nav-icon-bar-icon-hover-bg: #2c3140;
+  --top-nav-icon-bar-icon-bg: #1b202b;
+  --top-nav-icon-bar-icon-fg: #b6ada2;
+  --top-nav-icon-bar-icon-hover-bg: rgba(240, 135, 63, 0.16);
   --top-nav-icon-bar-icon-hover-fg: #ffffff;
-  --top-nav-stats-fg: #9b9490;
-  --top-nav-toggle-fg: #9b9490;
+  --top-nav-stats-fg: #8a8178;
+  --top-nav-toggle-fg: #8a8178;
 
   /* --- secondary navigation -------------------------------------------- */
-  --secondary-nav-bg: var(--nc-deep);
+  --secondary-nav-bg: #0c0f15;
   --secondary-nav-box-shadow: 0 1px 0 0 var(--nc-line-soft);
   --secondary-nav-tab-fg: var(--nc-ink-2);
   --secondary-nav-tab-hover-fg: var(--nc-ink);
   --secondary-nav-tab-hover-bg: transparent;
   --secondary-nav-tab-active-text-decoration: underline var(--nc-copper) 2px;
-  --secondary-nav-tab-hover-text-decoration: underline rgba(217, 139, 95, 0.5) 2px;
-  --secondary-nav-tab-menu-bg: #1a1d27;
+  --secondary-nav-tab-hover-text-decoration: underline rgba(240, 135, 63, 0.45) 2px;
+  --secondary-nav-tab-menu-bg: #13161f;
   --secondary-nav-tab-menu-border: 1px solid var(--nc-line);
-  --secondary-nav-tab-menu-border-radius: 8px;
-  --secondary-nav-tab-menu-box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.9);
+  --secondary-nav-tab-menu-border-radius: var(--nc-radius);
+  --secondary-nav-tab-menu-box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.95);
 
   /* --- breadcrumbs ----------------------------------------------------- */
   --breadcrumb-fg: var(--nc-ink-3);
@@ -140,7 +132,7 @@
   --breadcrumb-hover-fg: var(--nc-ink);
 
   /* --- footer ---------------------------------------------------------- */
-  --footer-bg: #0b0c11;
+  --footer-bg: #07080c;
   --footer-hr-fg: var(--nc-line-soft);
 
   /* --- buttons --------------------------------------------------------- */
@@ -161,54 +153,54 @@
   --icon-button-border-radius: 8px;
 
   /* --- form controls --------------------------------------------------- */
-  --input-text-border: 1px solid #2b3040;
-  --input-text-border-hover: 2px solid #3d4356;
-  --input-text-border-active: 2px solid var(--nc-copper);
+  --input-text-border: 1px solid #232936;
+  --input-text-border-hover: 1px solid #38414f;
+  --input-text-border-active: 1px solid var(--nc-copper);
   --input-text-border-error: 1px solid var(--nc-rose);
   --input-text-border-radius: 8px;
   --input-text-fg: var(--nc-ink);
   --input-text-padding: 12px;
-  --input-text-padding-hover: 11px;
-  --input-text-padding-active: 11px;
+  --input-text-padding-hover: 12px;
+  --input-text-padding-active: 12px;
 
-  --select-border: 1px solid #2b3040;
-  --select-border-hover: 2px solid #3d4356;
-  --select-border-active: 2px solid var(--nc-copper);
+  --select-border: 1px solid #232936;
+  --select-border-hover: 1px solid #38414f;
+  --select-border-active: 1px solid var(--nc-copper);
   --select-border-error: 1px solid var(--nc-rose);
   --select-border-radius: 8px;
   --select-fg: var(--nc-ink);
   --select-padding: 11px 23px 11px 11px;
-  --select-padding-hover: 10px 22px 10px 10px;
-  --select-padding-active: 10px 22px 10px 10px;
-  --select-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='%23c3bcb2' d='M6 8l-1 1l5 5l5-5l-1-1l-4 4l-4-4z'/></svg>");
+  --select-padding-hover: 11px 23px 11px 11px;
+  --select-padding-active: 11px 23px 11px 11px;
+  --select-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='%23b6ada2' d='M6 8l-1 1l5 5l5-5l-1-1l-4 4l-4-4z'/></svg>");
 
-  --textarea-border: 1px solid #2b3040;
-  --textarea-border-hover: 2px solid #3d4356;
-  --textarea-border-active: 2px solid var(--nc-copper);
+  --textarea-border: 1px solid #232936;
+  --textarea-border-hover: 1px solid #38414f;
+  --textarea-border-active: 1px solid var(--nc-copper);
   --textarea-border-error: 1px solid var(--nc-rose);
   --textarea-border-radius: 8px;
   --textarea-fg: var(--nc-ink);
   --textarea-padding: 12px;
-  --textarea-padding-hover: 11px;
-  --textarea-padding-active: 11px;
+  --textarea-padding-hover: 12px;
+  --textarea-padding-active: 12px;
 
   --label-bg: var(--nc-raised);
   --label-fg: var(--nc-ink-2);
-  --label-fg-hover: #d6cfc5;
+  --label-fg-hover: #ece6dd;
   --label-fg-active: var(--nc-copper);
   --label-fg-error: var(--nc-rose);
-  --option-bg: #1a1d27;
+  --option-bg: #13161f;
   --option-fg: var(--nc-ink);
   --fieldset-bg: transparent;
-  --fieldset-fg: #d6cfc5;
-  --fieldset-border: 1px solid rgba(233, 228, 220, 0.12);
-  --fieldset-border-radius: 10px;
+  --fieldset-fg: var(--nc-ink-2);
+  --fieldset-border: 1px solid var(--nc-line);
+  --fieldset-border-radius: var(--nc-radius);
   --legend-fg: var(--nc-ink-2);
   --legend-bg: transparent;
 
   /* --- alerts ---------------------------------------------------------- */
-  --alert-bg: #1a1d27;
-  --alert-fg: #d6cfc5;
+  --alert-bg: #13161f;
+  --alert-fg: var(--nc-ink-2);
   --alert-gap-color: var(--nc-line);
   --alert-gap-width: 1px;
 
@@ -216,57 +208,57 @@
   --data-table-fg: var(--text-color);
   --data-table-th-bg: var(--nc-raised);
   --data-table-tr-odd-bg: transparent;
-  --data-table-tr-even-bg: rgba(233, 228, 220, 0.025);
-  --data-table-tr-hover-bg: rgba(233, 228, 220, 0.055);
+  --data-table-tr-even-bg: rgba(236, 230, 221, 0.018);
+  --data-table-tr-hover-bg: rgba(240, 135, 63, 0.05);
   --data-table-tr-border: 1px solid var(--nc-line-soft);
   --data-table-thead-border: 1px solid var(--nc-line);
   --data-table-tfoot-border: 1px solid var(--nc-line);
-  --data-table-border-radius: 10px;
+  --data-table-border-radius: var(--nc-radius);
 
   /* --- key / value ----------------------------------------------------- */
   --key-value-fg: var(--text-color);
-  --key-value-odd-bg: rgba(233, 228, 220, 0.02);
+  --key-value-odd-bg: rgba(236, 230, 221, 0.018);
   --key-value-even-bg: transparent;
   --key-value-border-radius: 6px;
   --key-value-padding: 10px;
 
   /* --- forum ----------------------------------------------------------- */
-  --post-bg: #151720;
-  --post-fg: #d6cfc5;
+  --post-bg: #101319;
+  --post-fg: var(--nc-ink-2);
   --post-head-bg: transparent;
-  --post-head-fg: var(--text-color);
+  --post-head-fg: var(--nc-ink);
   --post-shadow: none;
   --post-toolbar-bg: var(--nc-deep);
-  --post-toolbar-fg: var(--nc-ink-2);
-  --post-toolbar-hover-bg: rgba(233, 228, 220, 0.06);
-  --post-toolbar-hover-fg: var(--nc-ink);
+  --post-toolbar-fg: var(--nc-ink-3);
+  --post-toolbar-hover-bg: rgba(240, 135, 63, 0.1);
+  --post-toolbar-hover-fg: var(--nc-copper-2);
   --post-like-fg: var(--nc-sage);
   --post-dislike-fg: var(--nc-rose);
   --post-aside-bg: var(--nc-raised);
   --post-aside-fg: var(--nc-ink-2);
-  --post-footer-fg: var(--nc-ink-2);
-  --subforum-listing-odd-bg: rgba(233, 228, 220, 0.02);
+  --post-footer-fg: var(--nc-ink-3);
+  --subforum-listing-odd-bg: rgba(236, 230, 221, 0.015);
   --subforum-listing-even-bg: transparent;
   --subforum-listing-border: 1px solid var(--nc-line-soft);
 
   /* --- bbcode / editor -------------------------------------------------- */
   --bbcode-input-header-bg: var(--nc-raised);
   --bbcode-input-body-bg: var(--nc-deep);
-  --bbcode-input-border: 1px solid rgba(233, 228, 220, 0.12);
+  --bbcode-input-border: 1px solid var(--nc-line);
   --bbcode-input-border-radius: 8px;
-  --bbcode-rendered-fg-default: #d6cfc5;
-  --bbcode-rendered-fg-muted: #9b9490;
-  --bbcode-rendered-fg-subtle: #6b655d;
+  --bbcode-rendered-fg-default: var(--nc-ink-2);
+  --bbcode-rendered-fg-muted: #8a8178;
+  --bbcode-rendered-fg-subtle: #655e57;
   --bbcode-rendered-canvas-default: transparent;
   --bbcode-rendered-canvas-subtle: var(--nc-raised);
-  --bbcode-rendered-border-default: rgba(233, 228, 220, 0.12);
+  --bbcode-rendered-border-default: var(--nc-line);
   --bbcode-rendered-border-muted: var(--nc-line-soft);
-  --bbcode-rendered-neutral-muted: rgba(233, 228, 220, 0.08);
-  --bbcode-rendered-accent-fg: var(--nc-copper);
-  --bbcode-rendered-accent-emphasis: var(--nc-copper-bright);
+  --bbcode-rendered-neutral-muted: rgba(236, 230, 221, 0.07);
+  --bbcode-rendered-accent-fg: var(--nc-copper-2);
+  --bbcode-rendered-accent-emphasis: var(--nc-copper);
   --bbcode-rendered-attention-subtle: var(--nc-amber);
   --bbcode-rendered-danger-fg: var(--nc-rose);
-  --bbcode-rendered-quote-bg: rgba(233, 228, 220, 0.03);
+  --bbcode-rendered-quote-bg: rgba(240, 135, 63, 0.045);
   --bbcode-rendered-quote-border: var(--nc-copper);
 
   /* --- torrents -------------------------------------------------------- */
@@ -274,79 +266,79 @@
   --torrent-card-fg: var(--text-color);
   --torrent-card-border: 1px solid var(--nc-line);
   --torrent-card-head-bg: var(--nc-raised);
-  --torrent-card-head-fg: #f4efe7;
-  --torrent-card-link-fg: #f4efe7;
-  --torrent-card-genre-fg: var(--nc-copper);
+  --torrent-card-head-fg: var(--nc-ink);
+  --torrent-card-link-fg: var(--nc-ink);
+  --torrent-card-genre-fg: var(--nc-copper-2);
   --torrent-group-bg: var(--nc-deep);
   --torrent-group-header-bg: var(--nc-raised);
-  --torrent-group-text: #f4efe7;
-  --torrent-group-text-muted: #8b8479;
-  --torrent-group-table-stripe-even: rgba(233, 228, 220, 0.02);
-  --torrent-group-table-stripe-odd: rgba(233, 228, 220, 0.045);
-  --torrent-group-hover-brightness-emphasis: 1.15;
+  --torrent-group-text: var(--nc-ink);
+  --torrent-group-text-muted: #857c72;
+  --torrent-group-table-stripe-even: rgba(236, 230, 221, 0.015);
+  --torrent-group-table-stripe-odd: rgba(236, 230, 221, 0.035);
+  --torrent-group-hover-brightness-emphasis: 1.12;
   --torrent-group-chip-border: var(--nc-line-soft);
-  --torrent-row-fg: #d6cfc5;
+  --torrent-row-fg: var(--nc-ink-2);
   --torrent-row-visited-fg: var(--nc-violet);
-  --torrent-row-sticky-bg: #232838;
+  --torrent-row-sticky-bg: #1a2030;
   --torrent-row-sticky-fg: var(--nc-ink);
-  --torrent-row-format-fg: #d6cfc5;
-  --torrent-row-format-bg: #242835;
+  --torrent-row-format-fg: var(--nc-ink-2);
+  --torrent-row-format-bg: #1b202b;
   --torrent-row-buttons-fg: currentColor;
   --torrent-row-seeders-fg: var(--nc-sage);
   --torrent-row-leechers-fg: var(--nc-rose);
   --torrent-row-completed-fg: var(--nc-azure);
   --torrent-row-comments-fg: var(--nc-sage-deep);
-  --torrent-row-internal-fg: #d9c9a3;
+  --torrent-row-internal-fg: #ddcba4;
   --torrent-row-personal-fg: var(--nc-violet);
-  --torrent-row-featured-fg: #c98fb0;
+  --torrent-row-featured-fg: #d59ec0;
   --torrent-row-freeleech-fg: var(--nc-amber);
-  --torrent-row-double-upload-fg: #8fb87f;
+  --torrent-row-double-upload-fg: #93c084;
   --torrent-row-highspeed-fg: var(--nc-rose);
-  --torrent-row-bumped-fg: var(--nc-copper-bright);
-  --torrent-tag-fg: #d6cfc5;
+  --torrent-row-bumped-fg: var(--nc-copper-2);
+  --torrent-tag-fg: var(--nc-ink-2);
   --torrent-tag-bg: transparent;
   --torrent-tag-hover-fg: #ffffff;
-  --torrent-tag-hover-bg: rgba(233, 228, 220, 0.08);
+  --torrent-tag-hover-bg: rgba(240, 135, 63, 0.1);
 
   /* --- quick search ---------------------------------------------------- */
-  --quick-search-bg: #1a1d27;
-  --quick-search-fg: #d6cfc5;
-  --quick-search-border: 1px solid rgba(233, 228, 220, 0.12);
-  --quick-search-border-radius: 10px;
-  --quick-search-box-shadow: 0 20px 44px -22px rgba(0, 0, 0, 0.95);
+  --quick-search-bg: #13161f;
+  --quick-search-fg: var(--nc-ink);
+  --quick-search-border: 1px solid var(--nc-line-strong);
+  --quick-search-border-radius: var(--nc-radius);
+  --quick-search-box-shadow: 0 28px 56px -28px rgba(0, 0, 0, 0.95);
   --quick-search-selector-fg: var(--nc-ink-2);
-  --quick-search-selector-hover-bg: rgba(233, 228, 220, 0.06);
+  --quick-search-selector-hover-bg: rgba(236, 230, 221, 0.05);
   --quick-search-selector-hover-fg: var(--nc-ink);
-  --quick-search-selector-selected-bg: #2b3040;
+  --quick-search-selector-selected-bg: rgba(240, 135, 63, 0.16);
   --quick-search-selector-selected-fg: #ffffff;
-  --quick-search-result-bg: #1a1d27;
-  --quick-search-result-fg: #d6cfc5;
-  --quick-search-result-hover-bg: rgba(233, 228, 220, 0.06);
+  --quick-search-result-bg: #13161f;
+  --quick-search-result-fg: var(--nc-ink);
+  --quick-search-result-hover-bg: rgba(240, 135, 63, 0.08);
   --quick-search-result-hover-fg: #ffffff;
-  --quick-search-result-year-fg: #8b8479;
+  --quick-search-result-year-fg: #8a8178;
   --quick-search-result-image-border-radius: 6px;
   --quick-search-result-border: none;
-  --compact-search-bg: #1a1d27;
+  --compact-search-bg: #13161f;
   --compact-search-fg: var(--text-color);
   --compact-search-box-shadow: none;
-  --compact-search-border-radius: 10px;
+  --compact-search-border-radius: var(--nc-radius);
 
   /* --- pagination ------------------------------------------------------ */
   --paginate-bg: var(--nc-deep);
   --paginate-bg-hover: var(--nc-raised);
-  --paginate-bg-current: #2b3040;
+  --paginate-bg-current: rgba(240, 135, 63, 0.16);
   --paginate-fg: var(--nc-ink-2);
-  --paginate-fg-disabled: #5d574f;
+  --paginate-fg-disabled: #565049;
   --paginate-divider: var(--nc-line-soft);
   --paginate-border-radius: 8px;
 
   /* --- chat ------------------------------------------------------------ */
   --chatbox-message-bg: var(--nc-raised);
-  --chatbox-button-fg: var(--nc-ink-3);
-  --chatbox-button-hover-fg: #d6cfc5;
+  --chatbox-button-fg: #8a8178;
+  --chatbox-button-hover-fg: var(--nc-ink-2);
   --chatbox-users-bg: var(--nc-deep);
   --chatbox-tab-delete-fg: var(--nc-rose);
-  --chatbox-tab-delete-bg: #2b3040;
+  --chatbox-tab-delete-bg: rgba(255, 107, 129, 0.12);
   --message-bubble-bg: var(--nc-raised);
   --message-bubble-fg: currentColor;
   --message-bubble-border: 1px solid var(--nc-line-soft);
@@ -357,24 +349,24 @@
   --meta-backdrop-filter: none;
   --meta-dropdown-backdrop-filter: none;
   --meta-dropdown-backdrop-filter-hover: none;
-  --meta-dropdown-bg: #1a1d27;
-  --meta-dropdown-hover-bg: rgba(233, 228, 220, 0.06);
+  --meta-dropdown-bg: #13161f;
+  --meta-dropdown-hover-bg: rgba(240, 135, 63, 0.1);
   --meta-dropdown-fg: var(--nc-ink-2);
   --meta-dropdown-hover-fg: var(--nc-ink);
-  --meta-description-fg: #c3bcb2;
-  --meta-id-tag-fg: #c3bcb2;
+  --meta-description-fg: var(--nc-ink-2);
+  --meta-id-tag-fg: var(--nc-ink-2);
   --meta-id-tag-bg: transparent;
   --meta-id-tag-hover-fg: #ffffff;
-  --meta-id-tag-hover-bg: rgba(233, 228, 220, 0.09);
-  --meta-chips-heading-fg: #8b8479;
+  --meta-id-tag-hover-bg: rgba(236, 230, 221, 0.08);
+  --meta-chips-heading-fg: #857c72;
   --meta-chip-icon-bg: var(--nc-copper);
   --meta-chip-icon-fg: var(--nc-on-copper);
-  --meta-chip-icon-hover-bg: var(--nc-copper-bright);
+  --meta-chip-icon-hover-bg: var(--nc-copper-2);
   --meta-chip-name-fg: var(--nc-ink);
   --meta-chip-value-fg: var(--nc-ink-2);
   --meta-chip-value-hover-fg: var(--nc-ink);
   --meta-chip-backdrop-filter-hover: none;
-  --meta-chip-hover-bg: rgba(233, 228, 220, 0.06);
+  --meta-chip-hover-bg: rgba(240, 135, 63, 0.09);
   --meta-popup-bg: var(--nc-deep);
   --meta-popup-fg: var(--nc-ink-2);
 
@@ -382,167 +374,778 @@
   --achievement-bg: var(--nc-raised);
   --achievement-fg: inherit;
   --achievement-progress-bg: var(--nc-copper);
-  --achievement-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --article-card-bg: #1a1d27;
-  --article-card-fg: #d6cfc5;
-  --article-card-head-fg: #f4efe7;
-  --article-card-time-fg: #8b8479;
-  --article-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --achievement-box-shadow: var(--nc-shadow);
+  --article-card-bg: #13161f;
+  --article-card-fg: var(--nc-ink-2);
+  --article-card-head-fg: var(--nc-ink);
+  --article-card-time-fg: #857c72;
+  --article-box-shadow: var(--nc-shadow);
   --collectible-card-bg: var(--nc-deep);
-  --collectible-card-fg: #d6cfc5;
+  --collectible-card-fg: var(--nc-ink-2);
   --collectible-card-hover-fg: #ffffff;
   --collectible-card-border: 1px solid var(--nc-line-soft);
-  --collectible-card-border-radius: 10px;
+  --collectible-card-border-radius: var(--nc-radius);
   --collectible-card-box-shadow: none;
   --mediahub-card-bg: var(--nc-deep);
-  --mediahub-card-fg: #d6cfc5;
+  --mediahub-card-fg: var(--nc-ink-2);
   --mediahub-card-hover-fg: #ffffff;
   --mediahub-card-border: 1px solid var(--nc-line-soft);
-  --mediahub-card-border-radius: 10px;
+  --mediahub-card-border-radius: var(--nc-radius);
   --mediahub-card-box-shadow: none;
   --playlist-card-bg: var(--nc-deep);
-  --playlist-card-fg: #d6cfc5;
+  --playlist-card-fg: var(--nc-ink-2);
   --playlist-card-border: 1px solid var(--nc-line-soft);
-  --playlist-card-border-radius: 10px;
+  --playlist-card-border-radius: var(--nc-radius);
   --playlist-card-box-shadow: none;
   --playlist-card-missing-image-bg: var(--nc-raised);
-  --playlist-card-missing-image-fg: #b5b5b5;
+  --playlist-card-missing-image-fg: var(--nc-ink-3);
   --prize-bg: var(--nc-deep);
-  --prize-fg: #d6cfc5;
-  --prize-heading-fg: #f4efe7;
+  --prize-fg: var(--nc-ink-2);
+  --prize-heading-fg: var(--nc-ink);
   --prize-border: 1px solid var(--nc-line-soft);
-  --prize-border-radius: 10px;
+  --prize-border-radius: var(--nc-radius);
   --prize-box-shadow: none;
   --prize-icon-primary-color: var(--nc-copper);
   --prize-icon-secondary-color: var(--nc-ink);
   --user-stat-card-bg: var(--nc-deep);
-  --user-stat-card-fg: #d6cfc5;
+  --user-stat-card-fg: var(--nc-ink-2);
   --user-stat-card-border: 1px solid var(--nc-line-soft);
-  --user-stat-card-border-radius: 10px;
+  --user-stat-card-border-radius: var(--nc-radius);
   --user-stat-card-box-shadow: none;
 
   /* --- donation -------------------------------------------------------- */
   --donation-background-color: var(--nc-deep);
   --donation-border-color: var(--nc-line-soft);
-  --donation-box-shadow-color: rgba(0, 0, 0, 0.5);
+  --donation-box-shadow-color: rgba(0, 0, 0, 0.6);
   --donation-primary-text-color: var(--nc-ink);
   --donation-secondary-text-color: var(--nc-ink-2);
-  --donation-price-days-color: var(--nc-copper);
-  --donation-chart-daily-bg: rgba(122, 162, 247, 0.2);
+  --donation-price-days-color: var(--nc-copper-2);
+  --donation-chart-daily-bg: rgba(110, 168, 254, 0.18);
   --donation-chart-daily-border: var(--nc-azure);
-  --donation-chart-monthly-bg: rgba(217, 139, 95, 0.2);
+  --donation-chart-monthly-bg: rgba(240, 135, 63, 0.18);
   --donation-chart-monthly-border: var(--nc-copper);
 
   /* --- betting --------------------------------------------------------- */
-  --bet-foreground: #d6cfc5;
+  --bet-foreground: var(--nc-ink-2);
   --bet-foreground-alt: var(--nc-ink);
   --bet-bg: var(--nc-deep);
   --bet-bg-alt: var(--nc-raised);
-  --bet-bg-item: #1a1d27;
-  --bet-bg-active: #2b3040;
-  --bet-muted: #9b9490;
+  --bet-bg-item: #13161f;
+  --bet-bg-active: rgba(240, 135, 63, 0.16);
+  --bet-muted: #8a8178;
   --bet-muted-weak: var(--nc-ink-2);
-  --bet-link-hover: var(--nc-copper-bright);
+  --bet-link-hover: var(--nc-copper-2);
   --bet-coin-accent: var(--nc-amber);
   --bet-active-tab-fg: #ffffff;
-  --bet-border: 1px solid rgba(233, 228, 220, 0.09);
+  --bet-border: 1px solid var(--nc-line);
   --bet-primary: var(--nc-copper);
   --bet-success: var(--nc-sage);
   --bet-warning: var(--nc-amber);
   --bet-danger: var(--nc-rose);
 
   /* --- semantic UI + gauges -------------------------------------------- */
-  --ui-accent-fg: var(--nc-copper);
+  --ui-accent-fg: var(--nc-copper-2);
   --ui-success-fg: var(--nc-sage);
   --ui-success-fg-strong: var(--nc-sage-deep);
   --ui-warning-fg: var(--nc-amber);
-  --ui-warning-fg-strong: var(--nc-amber-deep);
+  --ui-warning-fg-strong: #e0a832;
   --ui-danger-fg: var(--nc-rose);
   --ui-danger-fg-weak: var(--nc-rose-soft);
   --ui-info-fg: var(--nc-azure);
-  --ui-info-fg-weak: #9b9490;
-  --meter-bg: #2b3040;
+  --ui-info-fg-weak: #8a8178;
+  --meter-bg: #232936;
   --meter-fg: var(--nc-copper);
   --notification-read: transparent;
   --notification-unread: var(--nc-copper);
-  --comparison-divider-fg: #f4efe7;
+  --comparison-divider-fg: var(--nc-ink);
   --comparison-button-fg: var(--nc-on-copper);
 
-  /* --- the base colour scale (feeds accents, quotes, tags) ------------- */
-  --color-bright-white: #f4efe7;
-  --color-green: #557a4f;
+  /* --- base colour scale ----------------------------------------------- */
+  --color-bright-white: #fdf8f1;
+  --color-green: #4d7a52;
   --color-light-green: var(--nc-sage);
-  --color-dark-green: #2f4030;
-  --color-red: #7a4a52;
+  --color-dark-green: #2b4030;
+  --color-red: #7a3d48;
   --color-light-red: var(--nc-rose);
-  --color-dark-red: #402c31;
-  --color-blue: #4a6280;
+  --color-dark-red: #402229;
+  --color-blue: #3f5c80;
   --color-light-blue: var(--nc-azure);
-  --color-dark-blue: #2c3548;
-  --color-yellow: #7a6a45;
+  --color-dark-blue: #26334a;
+  --color-yellow: #7a6745;
   --color-light-yellow: var(--nc-amber);
-  --color-purple: #4a4470;
+  --color-purple: #453f70;
   --color-light-purple: var(--nc-violet);
-  --color-dark-purple: #302d4a;
-  --color-magenta: #6b4a63;
-  --color-light-magenta: #c98fb0;
-  --color-dark-magenta: #402c3b;
-  --color-light-orange: var(--nc-copper);
+  --color-dark-purple: #2c2848;
+  --color-magenta: #6b4463;
+  --color-light-magenta: #d59ec0;
+  --color-dark-magenta: #3d2536;
+  --color-light-orange: var(--nc-copper-2);
 }
 
 /* ==========================================================================
-   Component rules — only what the tokens above can't reach.
-   Kept deliberately short: every rule here is one the variable layer could
-   not express. No !important, so nothing fights the site if it changes.
+   2. CANVAS — art layer, grain, selection, scrollbars, focus
    ========================================================================== */
 
-/* A cheap, static wash so the canvas isn't flat. Two gradients, no images,
-   no fixed attachment (which would repaint on every scroll frame). */
-body {
+html {
+  /* Two soft lights: ember low-left, cold azure top-right. Fixed so the page
+     reads as one lit scene rather than a gradient that scrolls away. */
+  background-color: var(--nc-canvas);
   background-image:
-    radial-gradient(1100px 520px at 12% -8%, rgba(217, 139, 95, 0.055), transparent 70%),
-    radial-gradient(900px 480px at 96% 0%, rgba(122, 162, 247, 0.04), transparent 62%);
+    radial-gradient(1200px 700px at 8% 105%, rgba(240, 135, 63, 0.1), transparent 62%),
+    radial-gradient(1000px 560px at 98% -6%, rgba(110, 168, 254, 0.07), transparent 60%);
+  background-attachment: fixed;
   background-repeat: no-repeat;
 }
 
-/* Ranking colours stay untouched, but the utility text classes should match
-   the theme rather than Galactic's greens and blues. */
+body {
+  background-color: transparent;
+  color: var(--nc-ink);
+}
+
+/* Film grain. One fixed layer, 3% opacity, pointer-events off: the cheapest
+   way to stop large flat panels from banding, and the detail that makes the
+   surfaces read as material instead of fill. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: rgba(240, 135, 63, 0.32);
+  color: #ffffff;
+}
+
+/* Slim, dark scrollbars with a copper thumb on hover. */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #262c39;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nc-copper);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+:where(a, button, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--nc-copper);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   3. CHROME — top nav, logo, secondary nav, breadcrumbs, footer
+   ========================================================================== */
+
+.top-nav {
+  background-color: var(--top-nav-bg);
+  border-bottom: 1px solid transparent;
+  background-image: linear-gradient(180deg, rgba(240, 135, 63, 0.055), transparent);
+}
+
+/* Active/hover menu items get an ember underline drawn as a background so no
+   pseudo-element can collide with the dropdown carets. */
+.top-nav__main-menus > li > a,
+.top-nav--left__list-item > a,
+.top-nav__dropdown-trigger {
+  background-image: linear-gradient(var(--nc-copper), var(--nc-copper));
+  background-size: 0 2px;
+  background-position: 0 calc(100% - 0px);
+  background-repeat: no-repeat;
+  transition: background-size 180ms ease, color 180ms ease;
+}
+.top-nav__main-menus > li > a:hover,
+.top-nav--left__list-item > a:hover,
+.top-nav__dropdown-trigger:hover {
+  background-size: 100% 2px;
+  color: #ffffff;
+}
+
+/* The wordmark: tracked, heavy, warm; the duck gets the accent. */
+.top-nav__branding {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+.top-nav__branding i,
+.top-nav__branding .fat,
+.top-nav__branding .fa-duck {
+  color: var(--nc-copper);
+  filter: drop-shadow(0 0 10px rgba(240, 135, 63, 0.45));
+  transition: transform 200ms ease, filter 200ms ease;
+}
+.top-nav__branding:hover i,
+.top-nav__branding:hover .fat,
+.top-nav__branding:hover .fa-duck {
+  transform: translateY(-1px) rotate(-4deg);
+  filter: drop-shadow(0 0 16px rgba(240, 135, 63, 0.75));
+}
+.top-nav__site-logo {
+  font-weight: 800;
+  font-size: 1.02em;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  background-image: linear-gradient(100deg, var(--nc-copper-2), var(--nc-copper));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--nc-copper-2);
+}
+
+.top-nav__dropdown-menu {
+  padding: 6px;
+  border-top: 2px solid var(--nc-copper) !important;
+}
+.top-nav__dropdown-menu a {
+  border-radius: 7px;
+}
+
+.secondary-nav {
+  background-color: var(--secondary-nav-bg);
+  backdrop-filter: none;
+}
+.nav-tabsV2 > li > a,
+.secondary-nav .nav-tabsV2 a {
+  letter-spacing: 0.02em;
+  transition: color 160ms ease;
+}
+.breadcrumbsV2 {
+  font-size: 0.86em;
+  letter-spacing: 0.02em;
+}
+
+.footer {
+  border-top: 1px solid var(--nc-line);
+  background-image: linear-gradient(180deg, rgba(240, 135, 63, 0.03), transparent 40%);
+}
+.footer__section-title {
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--nc-copper) !important;
+}
+.footer__links a,
+.footer__section-list a {
+  color: var(--nc-ink-2);
+  transition: color 160ms ease;
+}
+.footer__links a:hover,
+.footer__section-list a:hover {
+  color: var(--nc-copper-2);
+}
+.footer__stats,
+.footer__copyright {
+  color: var(--nc-ink-3);
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   4. SURFACES — panels, cards, dialogs, popovers
+   ========================================================================== */
+
+.panelV2,
+.panel {
+  background-color: var(--nc-surface);
+  border: 1px solid var(--nc-line);
+  border-radius: var(--nc-radius-lg);
+  box-shadow: var(--nc-shadow), var(--nc-edge);
+}
+
+/* Panel titles: small, tracked, uppercase, in ember. This single rule does
+   most of the work of making the pages read as designed. */
+.panel__heading,
+.panelV2 .panel__heading,
+.panel__header h2,
+.panel__header h3 {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--nc-copper);
+  padding-left: 16px;
+  position: relative;
+}
+.panel__heading::before,
+.panel__header h2::before,
+.panel__header h3::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  width: 3px;
+  height: 13px;
+  margin-top: -6.5px;
+  border-radius: 2px;
+  background-image: linear-gradient(var(--nc-copper-2), var(--nc-copper));
+}
+.panel__heading a,
+.panel__heading a:visited {
+  color: inherit;
+}
+.panel__heading a:hover {
+  color: var(--nc-copper-2);
+}
+
+.panel__header {
+  background-image: none !important;
+  background-color: transparent;
+  border-bottom: 1px solid var(--nc-line);
+  padding-bottom: 10px;
+}
+.panel__body {
+  color: var(--nc-ink-2);
+}
+.panel__footer,
+.panel__actions {
+  border-top: 1px solid var(--nc-line-soft);
+}
+
+/* Cards: flat slabs with a lit top edge. */
+.torrent-card,
+.article-card,
+.article-preview,
+.user-stat-card,
+.achievement,
+.forum-category,
+.forum-item,
+.quick-search__result,
+article.comment,
+.home-block-placeholder,
+.user-profile-card__section {
+  border: 1px solid var(--nc-line);
+  border-radius: var(--nc-radius-lg);
+  box-shadow: var(--nc-shadow), var(--nc-edge);
+  transition: border-color 180ms ease, transform 180ms ease, background-color 180ms ease;
+}
+.torrent-card:hover,
+.article-card:hover,
+.forum-item:hover,
+article.comment:hover {
+  border-color: rgba(240, 135, 63, 0.34);
+}
+
+.torrent-card__header,
+.torrent-card__head {
+  border-bottom: 1px solid var(--nc-line);
+}
+.torrent-card__title,
+.torrent-card__link {
+  color: var(--nc-ink) !important;
+  font-weight: 600;
+}
+.torrent-card__link:hover {
+  color: var(--nc-copper-2) !important;
+}
+.torrent-card__genre-item {
+  border: 1px solid var(--nc-line);
+  border-radius: 5px;
+  padding: 1px 7px;
+  color: var(--nc-copper-2);
+  font-size: 0.82em;
+  letter-spacing: 0.03em;
+}
+.torrent-card__image {
+  border-radius: 8px;
+}
+
+/* Dialog + popover chrome. */
+.dialog,
+.swal2-popup,
+.modal__content {
+  border-radius: var(--nc-radius-lg) !important;
+  border: 1px solid var(--nc-line-strong) !important;
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.95) !important;
+}
+.swal2-title {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 1.05rem !important;
+  color: var(--nc-copper) !important;
+}
+
+.meta__dropdown,
+.quick-search,
+.meta__poster-popup-content,
+.vscomp-dropdown {
+  border: 1px solid var(--nc-line-strong);
+  border-radius: var(--nc-radius);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.95);
+}
+
+/* ==========================================================================
+   5. TORRENTS — rows, posters, badges, stat readouts, actions
+   ========================================================================== */
+
+.torrent-search__results,
+table.torrent-search--grouped__torrents,
+.data-table {
+  border-radius: var(--nc-radius);
+}
+
+.data-table > thead > tr > th,
+.torrent-group-header {
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--nc-ink-3);
+  border-bottom: 1px solid var(--nc-line) !important;
+}
+
+/* The row is the thing people stare at all day: hairline separation, a warm
+   wash and an ember edge on hover, numbers that line up. */
+tr.torrent-search-row {
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+tr.torrent-search-row:hover,
+.torrent-search-row:hover {
+  background-color: rgba(240, 135, 63, 0.05) !important;
+  box-shadow: inset 2px 0 0 var(--nc-copper);
+}
+.torrent-search-row__name {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--nc-ink) !important;
+}
+.torrent-search-row__name:hover {
+  color: var(--nc-copper-2) !important;
+}
+.torrent-search-row__meta,
+.torrent-search-row__stat,
+.torrent-search-row__stats {
+  font-variant-numeric: tabular-nums;
+  color: var(--nc-ink-3);
+  letter-spacing: 0.01em;
+}
+.torrent-search-row__stat--seeders {
+  color: var(--nc-sage) !important;
+}
+.torrent-search-row__stat--leechers {
+  color: var(--nc-rose) !important;
+}
+.torrent-search-row__stat--completed {
+  color: var(--nc-azure) !important;
+}
+.torrent-search-row__poster-img {
+  border-radius: 8px;
+  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.9), 0 0 0 1px var(--nc-line-strong);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.torrent-search-row:hover .torrent-search-row__poster-img {
+  transform: scale(1.03);
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(240, 135, 63, 0.45);
+}
+.torrent-search-row__category,
+.torrent-search-row__type,
+.torrent-search-row__resolution {
+  font-size: 0.82em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--nc-ink-3);
+}
+
+/* Badges: quiet chips, not loud pills. */
+.torrent-badges__item {
+  background-color: rgba(236, 230, 221, 0.045) !important;
+  border: 1px solid var(--nc-line);
+  border-radius: 6px;
+  color: var(--nc-ink-2) !important;
+  font-variant-numeric: tabular-nums;
+}
+.torrent-badges__item:hover {
+  background-color: rgba(240, 135, 63, 0.12) !important;
+  border-color: rgba(240, 135, 63, 0.3);
+  color: var(--nc-copper-2) !important;
+}
+
+.torrent-search-row__action--download,
+.torrent-search-row__action {
+  border-radius: 7px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.torrent-search-row__action--download:hover {
+  background-color: rgba(240, 135, 63, 0.16) !important;
+  color: var(--nc-copper-2) !important;
+}
+
+/* Filter rail reads as part of the panel rather than a form dropped on it. */
+.torrent-search__filters {
+  border: 1px solid var(--nc-line);
+  border-radius: var(--nc-radius-lg);
+  background-color: rgba(236, 230, 221, 0.012);
+  padding: 14px;
+}
+.torrent-search__filters .form__label {
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--nc-ink-3);
+}
+
+/* ==========================================================================
+   6. FORUM + CHAT
+   ========================================================================== */
+
+.forum-category__header,
+.forum-hero {
+  border-bottom: 1px solid var(--nc-line);
+  background-image: linear-gradient(180deg, rgba(240, 135, 63, 0.05), transparent);
+}
+.forum-category__title {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--nc-copper);
+}
+.forum-category__count,
+.forum-item__stat-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--nc-ink);
+}
+.forum-item__stat-label,
+.forum-item__latest-meta,
+.forum-item__latest-time {
+  font-size: 0.82em;
+  color: var(--nc-ink-3);
+}
+.forum-item__icon {
+  border-radius: 9px;
+  background-color: rgba(240, 135, 63, 0.1);
+  color: var(--nc-copper) !important;
+}
+.forum-item__title a {
+  font-weight: 600;
+  color: var(--nc-ink);
+}
+.forum-item__title a:hover {
+  color: var(--nc-copper-2);
+}
+
+/* Posts: the left rail carries the hierarchy. */
+article.post,
+.post {
+  border-left: 2px solid transparent;
+  transition: border-color 180ms ease;
+}
+article.post:hover,
+.post:hover {
+  border-left-color: rgba(240, 135, 63, 0.5);
+}
+.post__aside {
+  border-right: 1px solid var(--nc-line-soft);
+}
+.post__heading a,
+.post__author-name {
+  font-weight: 600;
+  color: var(--nc-ink);
+}
+
+.bbcode-rendered {
+  line-height: 1.65;
+}
+.bbcode-rendered h1,
+.bbcode-rendered h2,
+.bbcode-rendered h3 {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.95em;
+  color: var(--nc-copper);
+}
+.bbcode-rendered blockquote {
+  border-left: 2px solid var(--nc-copper);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  background-color: rgba(240, 135, 63, 0.045);
+}
+.bbcode-rendered code,
+.bbcode-rendered pre {
+  border: 1px solid var(--nc-line);
+  border-radius: 8px;
+  background-color: var(--nc-deep);
+}
+.bbcode-rendered table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Chat: bubbles that sit on the panel instead of shouting. */
+.chatV2__toolbar {
+  border: 1px solid var(--nc-line-soft);
+  border-radius: var(--nc-radius);
+  background-color: rgba(24, 28, 38, 0.92);
+  box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.9);
+}
+.chatV2__messageBody,
+.chatV2__messageBodyContent {
+  border: 1px solid var(--nc-line-soft);
+  border-radius: 12px;
+  background-color: rgba(236, 230, 221, 0.022);
+}
+.chatV2__author {
+  font-weight: 600;
+}
+.chatV2__time,
+.chatV2__edited {
+  font-size: 0.78em;
+  color: var(--nc-ink-3);
+}
+.chatV2__dateSeparator,
+.chatV2__newMessagesSeparator {
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--nc-ink-3);
+}
+.chatV2__quickReaction:hover {
+  background-color: rgba(240, 135, 63, 0.18);
+}
+.chatV2__memberRow:hover {
+  background-color: rgba(240, 135, 63, 0.08);
+  border-radius: 8px;
+}
+.chatV2__toolbarAction:hover {
+  color: var(--nc-copper-2);
+}
+
+/* ==========================================================================
+   7. FORMS, BUTTONS, TABS, PAGINATION, ALERTS
+   ========================================================================== */
+
+.form__text,
+.form__select,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+  background-color: var(--nc-deep);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.form__text:focus,
+.form__select:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 0 3px rgba(240, 135, 63, 0.16);
+}
+.form__label {
+  letter-spacing: 0.03em;
+}
+
+/* Filled buttons get a lit, slightly dimensional face; outlined ones stay
+   quiet until hover. */
+.form__button--filled,
+button.form__button--filled {
+  background-image: linear-gradient(180deg, var(--nc-copper-2), var(--nc-copper));
+  color: var(--nc-on-copper) !important;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px -10px rgba(240, 135, 63, 0.7);
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+.form__button--filled:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 12px 26px -12px rgba(240, 135, 63, 0.85);
+}
+.form__button--filled:active {
+  transform: translateY(0);
+}
+.form__button--outlined {
+  border: 1px solid var(--nc-line-strong);
+  color: var(--nc-ink-2);
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+.form__button--outlined:hover {
+  border-color: rgba(240, 135, 63, 0.5);
+  background-color: rgba(240, 135, 63, 0.09);
+  color: var(--nc-copper-2);
+}
+
+.nav-tabsV2 > li > a {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.pagination,
+.paginationV2 {
+  font-variant-numeric: tabular-nums;
+}
+.pagination a:hover,
+.paginationV2 a:hover {
+  color: var(--nc-copper-2);
+}
+
+/* Alerts: readable, with a semantic left edge instead of a loud fill. */
+.alert {
+  border: 1px solid var(--nc-line);
+  border-left: 3px solid var(--nc-copper);
+  border-radius: var(--nc-radius);
+  background-color: var(--nc-raised);
+  color: var(--nc-ink-2);
+}
+.alert--success,
+.alert.alert-success {
+  border-left-color: var(--nc-sage);
+}
+.alert--danger,
+.alert.alert-danger {
+  border-left-color: var(--nc-rose);
+}
+.alert--warning {
+  border-left-color: var(--nc-amber);
+}
+.alerts {
+  color: var(--nc-ink-2);
+}
+
+/* Utility text keeps the site's meaning but the theme's palette. */
 .text-green, .text-success { color: var(--nc-sage) !important; }
 .text-red, .text-danger { color: var(--nc-rose) !important; }
 .text-blue, .text-info { color: var(--nc-azure) !important; }
 .text-purple { color: var(--nc-violet) !important; }
 .text-gold, .text-yellow, .text-warning { color: var(--nc-amber) !important; }
 .text-orange { color: var(--nc-copper) !important; }
-.text-pink { color: #c98fb0 !important; }
+.text-pink { color: #d59ec0 !important; }
 .text-bright { color: #ffffff !important; }
 .text-muted { color: var(--nc-ink-3) !important; }
 
-/* Copper focus ring instead of the browser default, without adding
-   specificity (so form controls keep their own focus styling where they
-   already handle it better). */
-:where(a, button, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--nc-copper);
-  outline-offset: 2px;
+/* ==========================================================================
+   8. MOTION + ACCESSIBILITY
+   ========================================================================== */
+
+a,
+button,
+.form__button,
+.torrent-badges__item,
+.forum-item,
+.torrent-card {
+  transition-duration: 160ms;
+  transition-timing-function: ease;
 }
 
-::selection {
-  background: rgba(217, 139, 95, 0.28);
-  color: #ffffff;
-}
-
-/* A hairline along the top of panels reads as depth without a shadow. */
-.panelV2,
-.panel {
-  border: 1px solid var(--nc-line-soft);
-}
-
-/* Long torrent lists: keep the sticky header legible over rows. */
-.data-table > thead > tr > th,
-.torrent-group-header {
-  border-bottom: 1px solid var(--nc-line);
-}
-
-/* Respect the OS setting rather than animating regardless. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -551,5 +1154,10 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
+  }
+  tr.torrent-search-row:hover .torrent-search-row__poster-img,
+  .top-nav__branding:hover i,
+  .top-nav__branding:hover .fat {
+    transform: none !important;
   }
 }
